@@ -1207,8 +1207,8 @@ static const AVCodecDefault nvenc_defaults[] = {
     { NULL },
 };
 
-FFCodec ff_nvenc_encoder = {
-    .p.name = "h264_nvenc",
+FFCodec ff_h264_nvenc_encoder = {
+    .p.name = "h264_nvenc_legacy",
     CODEC_LONG_NAME("NVIDIA NVENC H.264 encoder - legacy"),
     .p.type = AVMEDIA_TYPE_VIDEO,
     .p.id = AV_CODEC_ID_H264,

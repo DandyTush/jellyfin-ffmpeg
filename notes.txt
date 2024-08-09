@@ -1,1 +1,9 @@
-./configure --enable-nvenc  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/" --disable-ffnvcodec
+./configure --enable-encoder=h264_nvenc_legacy  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/" 
+rsync -avz --delete -e "ssh" /home/dylan/jellyfin-ffmpeg/ dylan@192.168.10.19:/dev/shm/jellyfin-ffmpeg/ -vv
+
+
+enabled nvenc_legacy  
+
+nvenc_legacy - external library list
+
+h264_nvenc_legacy_encoder_deps

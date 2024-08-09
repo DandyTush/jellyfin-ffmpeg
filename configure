@@ -1892,6 +1892,7 @@ HWACCEL_AUTODETECT_LIBRARY_LIST="
     videotoolbox
     vulkan
     v4l2_m2m
+    nvenc_legacy
 "
 
 # catchall list of things that require external libs to link
@@ -3177,6 +3178,9 @@ h264_mf_encoder_deps="mediafoundation"
 h264_mmal_decoder_deps="mmal"
 h264_nvenc_encoder_deps="nvenc"
 h264_nvenc_encoder_select="atsc_a53"
+h264_nvenc_legacy_encoder_deps="nvenc_legacy"
+h264_nvenc_legacy_encoder_select="atsc_a53"
+
 h264_omx_encoder_deps="omx"
 h264_qsv_decoder_select="h264_mp4toannexb_bsf qsvdec"
 h264_qsv_encoder_select="atsc_a53 qsvenc"
@@ -6463,11 +6467,11 @@ else
 fi
 
 if ! disabled ffnvcodec; then
-    ffnv_hdr_list="ffnvcodec/nvEncodeAPI.h ffnvcodec/dynlink_cuda.h ffnvcodec/dynlink_cuviddec.h ffnvcodec/dynlink_nvcuvid.h"
-    check_pkg_config ffnvcodec "ffnvcodec >= 12.0.16.0" "$ffnv_hdr_list" "" || \
-      check_pkg_config ffnvcodec "ffnvcodec >= 11.1.5.2 ffnvcodec < 12.0" "$ffnv_hdr_list" "" || \
-      check_pkg_config ffnvcodec "ffnvcodec >= 11.0.10.2 ffnvcodec < 11.1" "$ffnv_hdr_list" "" || \
-      check_pkg_config ffnvcodec "ffnvcodec >= 8.1.24.14 ffnvcodec < 8.2" "$ffnv_hdr_list" ""
+    ffnv_hdr_list="nvEncodeAPI.h"
+    #check_pkg_config ffnvcodec "ffnvcodec >= 12.0.16.0" "$ffnv_hdr_list" "" || \
+    #  check_pkg_config ffnvcodec "ffnvcodec >= 11.1.5.2 ffnvcodec < 12.0" "$ffnv_hdr_list" "" || \
+    #  check_pkg_config ffnvcodec "ffnvcodec >= 11.0.10.2 ffnvcodec < 11.1" "$ffnv_hdr_list" "" || \
+    #  check_pkg_config ffnvcodec "ffnvcodec >= 8.1.24.14 ffnvcodec < 8.2" "$ffnv_hdr_list" ""
 fi
 
 if enabled_all libglslang libshaderc; then
@@ -7038,14 +7042,6 @@ fi
 
 enabled ffnvcodec && enable cuda
 
-enabled nvenc &&
-    test_cc -I$source_path <<EOF || disable nvenc
-#include <ffnvcodec/nvEncodeAPI.h>
-NV_ENCODE_API_FUNCTION_LIST flist;
-void f(void) { struct { const GUID guid; } s[] = { { NV_ENC_CODEC_H264_GUID } }; }
-int main(void) { return 0; }
-EOF
-
 if enabled nvenc; then
     check_type "ffnvcodec/nvEncodeAPI.h" "NV_ENC_PIC_PARAMS_AV1"
 fi
@@ -7488,6 +7484,10 @@ enabled uspp_filter         && prepend avfilter_deps "avcodec"
 enabled zoompan_filter      && prepend avfilter_deps "swscale"
 
 enabled lavfi_indev         && prepend avdevice_deps "avfilter"
+
+
+enabled nvenc_legacy             && { check_header nvEncodeAPI.h || die "ERROR: nvEncodeAPI.h not found."; } &&
+                             { [ $target_os != cygwin ] || die "ERROR: NVENC is not supported on Cygwin currently."; }
 
 #FIXME
 enabled_any sdl2_outdev opengl_outdev && enabled sdl2 &&
