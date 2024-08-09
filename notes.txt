@@ -1,9 +1,34 @@
-./configure --enable-encoder=h264_nvenc_legacy  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/" 
+
+I followed this guide to get the proxmox host to share the K1 as a PCI passthrough device: https://www.reddit.com/r/homelab/comments/b5xpua/the_ultimate_beginners_guide_to_gpu_passthrough/
+
+On the VM things are very tricky.
+
+if you are just using a Windows VM, you can probably use something like Sunshine and run rudimentary games using an old driver. Windows will probably work OK.
+
+A linux VMis harder. I'm using Ubuntu Server. For the GRID K1 you cannot use the standard Debian drivers, they are too new. You need 367 or older.
+
+367 does not work with modern kernels, you need to patch the drivers. I could only find a patch for 340, so I'm using that. Instructions here: https://www.if-not-true-then-false.com/2020/inttf-nvidia-patcher/
+It's possible that this could also work: https://www.reddit.com/r/linux_gaming/comments/uidipv/how_to_install_nvidia_driver_340_on_ubuntu_2204/
+
+On the client VM you also want to disable `nouveau` like so:
+echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.confecho "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf
+
+Now with an older nvidia driver version, modern CUDA won't work, so a recently compiled ffmpeg won't work.
+
+I'm trying to use this GRID for transcoding so I'm compiling an old version of ffpmeg (3.4.8 was too old, trying something older) and building that with cuda support.
+
+The goal is to use this with Jellyfin
+
+Edit: I'm trying ffmpeg 2.6 which should support the older nvenc headers for my driver version, but I can't find the dang headers for nvenc. I think I need nvenc headers for version 4 or 5. Only versions 8 and above seem to be available in the wild.
+
+
+
+https://github.com/ezdev128/nvenc-samples
+
+
+
+
+./configure --enable-encoder=h264_nvenc_legacy  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/"
+
 rsync -avz --delete -e "ssh" /home/dylan/jellyfin-ffmpeg/ dylan@192.168.10.19:/dev/shm/jellyfin-ffmpeg/ -vv
 
-
-enabled nvenc_legacy  
-
-nvenc_legacy - external library list
-
-h264_nvenc_legacy_encoder_deps
