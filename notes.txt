@@ -1,0 +1,1 @@
+./configure --enable-nvenc  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/" --disable-ffnvcodec
