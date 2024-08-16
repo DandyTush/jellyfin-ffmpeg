@@ -1884,9 +1884,6 @@ HWACCEL_AUTODETECT_LIBRARY_LIST="
     cuvid
     d3d11va
     dxva2
-    ffnvcodec
-    nvdec
-    nvenc
     vaapi
     vdpau
     videotoolbox
@@ -1894,6 +1891,10 @@ HWACCEL_AUTODETECT_LIBRARY_LIST="
     v4l2_m2m
     nvenc_legacy
 "
+# ^ Used to include
+#    ffnvcodec
+#    nvdec
+#    nvenc
 
 # catchall list of things that require external libs to link
 EXTRALIBS_LIST="
@@ -3176,10 +3177,8 @@ h264_mediacodec_encoder_extralibs="-landroid"
 h264_mediacodec_encoder_select="h264_metadata"
 h264_mf_encoder_deps="mediafoundation"
 h264_mmal_decoder_deps="mmal"
-h264_nvenc_encoder_deps="nvenc"
+h264_nvenc_encoder_deps="nvenc_legacy"
 h264_nvenc_encoder_select="atsc_a53"
-h264_nvenc_legacy_encoder_deps="nvenc_legacy"
-h264_nvenc_legacy_encoder_select="atsc_a53"
 
 h264_omx_encoder_deps="omx"
 h264_qsv_decoder_select="h264_mp4toannexb_bsf qsvdec"
@@ -7486,7 +7485,7 @@ enabled zoompan_filter      && prepend avfilter_deps "swscale"
 enabled lavfi_indev         && prepend avdevice_deps "avfilter"
 
 
-enabled nvenc_legacy             && { check_header nvEncodeAPI.h || die "ERROR: nvEncodeAPI.h not found."; } &&
+enabled nvenc_legacy         && { check_headers nvEncodeAPI.h || die "ERROR: nvEncodeAPI.h not found. Balls."; } &&
                              { [ $target_os != cygwin ] || die "ERROR: NVENC is not supported on Cygwin currently."; }
 
 #FIXME

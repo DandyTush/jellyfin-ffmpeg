@@ -30,5 +30,5 @@ https://github.com/ezdev128/nvenc-samples
 
 ./configure --enable-encoder=h264_nvenc_legacy  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/"
 
-rsync -avz --delete -e "ssh" /home/dylan/jellyfin-ffmpeg/ dylan@192.168.10.19:/dev/shm/jellyfin-ffmpeg/ -vv
+rsync -avz --delete -e "ssh" /Users/dylanrush/jellyfin-ffmpeg/ dylan@192.168.10.19:/dev/shm/jellyfin-ffmpeg/ -vv
 
