@@ -26,9 +26,15 @@ Edit: I'm trying ffmpeg 2.6 which should support the older nvenc headers for my 
 https://github.com/ezdev128/nvenc-samples
 
 
-
-
-./configure --enable-encoder=h264_nvenc_legacy  --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/"
-
+****
 rsync -avz --delete -e "ssh" /Users/dylanrush/jellyfin-ffmpeg/ dylan@192.168.10.19:/dev/shm/jellyfin-ffmpeg/ -vv
 
+
+./configure --enable-gpl --enable-nonfree --extra-cflags="-I/home/dylan/Samples/nvEncodeApp/inc/" --enable-nvenc-legacy --disable-cuda --disable-cuvid
+
+In file included from libavcodec/cuviddec.c:24:
+./compat/cuda/dynlink_loader.h:31:10: fatal error: ffnvcodec/dynlink_loader.h: No such file or directory
+   31 | #include <ffnvcodec/dynlink_loader.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make: *** [ffbuild/common.mak:81: libavcodec/cuviddec.o] Error 1
